@@ -57,10 +57,9 @@ model.newSetup( # Now, we'll define our new setup:
     fitnessHost=fitnessLandscape,
     contactHost=lethalCheck,
     mutationHost=lethalCheck,
-    recoveryHost=1,
     mean_inoculum_host=1,
     contact_rate_host_host=1e-2,
-    recovery_rate_host=recover_rate,
+    recovery_rate_host=recovery_rate,
     mutate_in_host=2e-2,
     recombine_in_host=0
     )
@@ -113,7 +112,7 @@ dat = pd.read_csv('contact_sweep_mutfrec.csv')
 
 # Plot mutant-only fraction of infected hosts
 sns.set_style("ticks")
-plt.figure(figsize=(8,3.5), dpi=300)
+plt.figure(figsize=(8,2.4), dpi=300)
 ax = sns.lineplot(
     x = 'contact_rate_host_host', y='mutant_frac', data=dat,
     color="#CC79A7", marker='o',ci=95
@@ -124,7 +123,7 @@ plt.tight_layout()
 plt.savefig('Fig2_replicate_mutfrec.png', bbox_inches='tight')
 
 # Plot number of infected hosts (along with ODE prediction)
-plt.figure(figsize=(8,3.5), dpi=300)
+plt.figure(figsize=(8,2.4), dpi=300)
 x = np.array(np.linspace(recovery_rate,2e-2,10000))
     # contact rates for ODE prediction
 y = 1- (recovery_rate/x) # ODE prediction
@@ -134,6 +133,6 @@ ax = sns.lineplot(
     color="#e69138", marker='o',ci=95,linestyle=''
     )
 ax.set_xlabel("Contact rate (1/unit time)")
-ax.set_ylabel('Fraction of hosts infected at equilibrium')
+ax.set_ylabel('Fraction of hosts \ninfected at equilibrium')
 plt.tight_layout()
 plt.savefig('Fig2_replicate_infhos.png', bbox_inches='tight')

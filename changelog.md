@@ -2,6 +2,12 @@
 # Evolution across fitness valleys
 ## Project changelog
 
+### 16 Dec 2021
+- added alone time plot to Fig. 2E
+- moved time series ODE plots to a separate folder
+- corrected Fig 5 recombination axes
+- renumbered supplementary figures
+
 ### 11 Dec 2021
 Renamed files. Updated figures 4 and 5 to have a more consistent set of
 parameters throughout study. Added supplementary figures S1, S3, S4.

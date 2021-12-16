@@ -176,113 +176,41 @@ def odeSolver(func,t,y0,p,solver='LSODA',rtol=1e-8,atol=1e-8,**kwargs):
 
     return y
 
-# Heatmaps
-samples = 200 # heatmap width in pixels
+# Solving model
+# To generate data, uncomment the following...
+# Single timecourse
+def solveModel():
 
-fitness_drops = np.linspace( 0, 1, samples, endpoint=True )
-    # fitness costs tested in Opqua stochastic model
+    '''
+    Main method containing single solver and plotter calls.
+    Writes figures to file.
+    '''
 
-# this transforms the fitness costs from Opqua scale to the fitness parameter
-# used in this model
-def transformDropsToODE(x):
-    return 1 / (2-x)# = 1 - (1-x) / ( 1 + (1-x) ) ; x = 2 - 1/y
-
-transformed_drops = np.around( [ transformDropsToODE(d) for d in fitness_drops ], decimals=5 )
-
-# contact rates tested in Opqua stochastic model
-contact_rates = np.around( np.linspace( 1e-1, 2e-1, samples, endpoint=True ), decimals=5 )
-
-# stores parameters and values to be used in sweep
-param_sweep_dic = { 'b':contact_rates,'f':transformed_drops }
-
-# generate dataframe with all combinations
-params_list = param_sweep_dic.keys()
-value_lists = [ param_sweep_dic[param] for param in params_list ]
-combinations = list( it.product( *value_lists ) )
-param_df = pd.DataFrame(combinations)
-param_df.columns = params_list
-
-results = {} # store results
-
-# This runs a single pixel
-def run(param_values):
     # Set up model conditions
     p = params() # get parameter values, store in dictionary p
     y_0 = initCond() # get initial conditions
     t = np.linspace(p['t_0'],p['t_f'],int(p['t_f']-p['t_0']/p['t_den']) + 1)
         # time vector based on minimum, maximum, and time step values
 
-    for i,param_name in enumerate(params_list):
-        p[param_name] = param_values[i]
+    # Solve model
+    sol = odeSolver(odeFun,t,y_0,p,solver="Radau");
+
+    # Call plotting of figure 1
+    figTSeries(sol,f_name='ODE_tseriesL-low_b.png')
+
+    # Set up model conditions
+    p = params() # get parameter values, store in dictionary p
+    p['b'] = 2e-1
+    y_0 = initCond() # get initial conditions
+    t = np.linspace(p['t_0'],p['t_f'],int(p['t_f']-p['t_0']/p['t_den']) + 1)
+        # time vector based on minimum, maximum, and time step values
 
     # Solve model
-    sol = odeSolver(odeFun,t,y_0,p,solver="LSODA");
+    sol = odeSolver(odeFun,t,y_0,p,solver="Radau");
 
-    mut_frac_pathogens = (sol.y[2,-1]+sol.y[3,-1]) \
-        / (sol.y[1,-1]+sol.y[2,-1]+2*sol.y[3,-1])
-    mut_only_frac_hosts = sol.y[2,-1] / p['N']
-    mut_total = sol.y[2,-1]+sol.y[3,-1]
-    uninfected = sol.y[0,-1]
+    # Call plotting of figure 2
+    figTSeries(sol,f_name='ODE_tseriesL-high_b.png')
 
-    return [mut_frac_pathogens, mut_only_frac_hosts, mut_total, uninfected]
+    plt.close()
 
-# Parallelize running all pixels in heatmap
-n_cores = jl.cpu_count()
-
-res = jl.Parallel(n_jobs=n_cores, verbose=10) (
-    jl.delayed( run ) (param_values) for param_values in combinations
-    )
-
-dat = param_df
-
-dat['mut_frac_pathogens'] = np.array(res)[:,0]
-dat['mut_only_frac_hosts'] = np.array(res)[:,1]
-dat['mut_total'] = np.array(res)[:,2]
-dat['fitness'] = 2 - 1/(dat['f']) # retransform back to opqua scale values
-dat['fitness'] = dat['fitness'].round(decimals=5)
-dat['uninfected'] = np.array(res)[:,3]
-dat.to_csv('deterministic_heatmaps.csv')
-# ...until here
-
-dat = pd.read_csv('deterministic_heatmaps.csv')
-
-# Reformat data for heatmaps
-dat_frac_pat = dat.pivot('b','fitness','mut_frac_pathogens')
-dat_frac_hos = dat.pivot('b','fitness','mut_only_frac_hosts')
-dat_total = dat.pivot('b','fitness','mut_total')
-dat_uninf = dat.pivot('b','fitness','uninfected')
-
-# Plot heatmaps
-plt.rcParams.update({'font.size': 12})
-
-def plotHeatmap(
-        dat,cmap_lab,file_name,cmap, vmin=None, vmax=None, show_labels=False):
-    plt.figure(figsize=(8,8), dpi=200)
-    ax = plt.subplot(1, 1, 1)
-    ax = sns.heatmap(
-        dat, linewidth = 0 , annot = False, cmap=cmap,
-        cbar_kws={'label': cmap_lab}, vmin=vmin, vmax=vmax,
-        xticklabels=show_labels, yticklabels=show_labels
-        )
-    ax.figure.axes[-1].yaxis.label.set_size(15)
-    ax.invert_yaxis()
-    spacing = '\n\n\n' if show_labels else ''
-    plt.xlabel('Competitive disadvantage of mutant'+spacing,fontsize=15)
-    plt.ylabel('Host-host contact rate'+spacing,fontsize=15)
-    plt.savefig(file_name, bbox_inches='tight')
-
-plotHeatmap(
-    dat_frac_pat,'Mutant prevalence in pathogen population',
-    'pathogen_heatmap_deterministic.png','rocket', vmin=0, vmax=1
-    )
-plotHeatmap(
-    dat_frac_hos,'Fraction of hosts \nwith only mutant pathogens',
-    'host_heatmap_deterministic.png','mako', vmin=0, vmax=0.515
-    )
-plotHeatmap(
-    dat_total,'Number of mutants','mutant_heatmap_deterministic.png','plasma'
-    )
-plotHeatmap(
-    dat_uninf,'Number of uninfected hosts',
-    'uninfected_heatmap_deterministic.png','viridis'
-    )
+solveModel()
