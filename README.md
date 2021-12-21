@@ -3,7 +3,8 @@ Pathogen evolution across fitness valleys
 
 Exploring pathogen evolution across fitness valleys using the
 [Opqua](https://github.com/pablocarderam/opqua) evolutionary epidemiological
-modeling package.
+modeling package. Check out the preprint on
+[biorXiv](https://doi.org/10.1101/2021.12.16.473045).
 
 Shows good examples of running parameter sweeps with Opqua.
 
