@@ -45,7 +45,7 @@ model.newSetup(
     'base_setup', preset='vector-borne',
     possible_alleles='ARNDCEQGHILKMFPSTWYV',
     num_loci=len(wt_genome),
-    fitnessHost=lambda g:fitnessDropFunction(g,0.5), # fix drop to 75% drop
+    fitnessHost=lambda g:fitnessDropFunction(g,0.5),
     mean_inoculum_host=1,
     mean_inoculum_vector=1,
     mutate_in_host=0,
