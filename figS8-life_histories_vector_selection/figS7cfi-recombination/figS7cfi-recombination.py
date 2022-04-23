@@ -3,7 +3,7 @@
 Cardenas & Santos-Vega, 2021
 Coded by github.com/pablocarderam
 Creates heatmaps of parameter sweeps for recombination in hosts and vectors
-used in Figure 5c,f,i
+used in Figure S8c,f,i
 '''
 
 import copy as cp

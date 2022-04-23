@@ -3,7 +3,7 @@
 Cardenas & Santos-Vega, 2021
 Coded by github.com/pablocarderam
 Creates heatmaps of parameter sweeps for mutation in and inoculation from hosts
-used in Figure 5a,d,g
+used in Figure S8a,d,g
 '''
 
 import copy as cp

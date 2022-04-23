@@ -2,6 +2,9 @@
 # Evolution across fitness valleys
 ## Project changelog
 
+## 22 Apr 2022
+Added Figure S7, vector selective pressure landscape, renamed Fig. S7 to S8.
+
 ## 21 Apr 2022
 Added Figure S7, vector selective pressure.
 
