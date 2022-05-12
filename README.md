@@ -1,8 +1,8 @@
 Pathogen evolution across fitness valleys
 
-[![DOI](https://zenodo.org/badge/437441496.svg)](https://zenodo.org/badge/latestdoi/437441496)
-
 =====
+
+[![DOI](https://zenodo.org/badge/437441496.svg)](https://zenodo.org/badge/latestdoi/437441496)
 
 Exploring pathogen evolution across fitness valleys using the
 [Opqua](https://github.com/pablocarderam/opqua) evolutionary epidemiological
