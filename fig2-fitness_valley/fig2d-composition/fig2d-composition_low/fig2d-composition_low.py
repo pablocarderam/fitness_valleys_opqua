@@ -78,7 +78,7 @@ model.newIntervention( t_d, 'treatHosts', [ 'my_population', 1, [re_seq] ] )
     # add drug, kills everything except resistant mutants
 
 t_f = t_d+5000 # final timepoint
-model.run(0,t_f,time_sampling=999, host_sampling=0, vector_sampling=0)
+model.run(0,t_f,time_sampling=99, host_sampling=0, vector_sampling=0)
 data = model.saveToDataFrame(
     'fitness_valley_example.csv'
     )
@@ -116,6 +116,7 @@ comp_dat = compositionDf(
 graph_composition = model.compositionPlot(
     'fitness_valley_example_composition.png', data,
     composition_dataframe=comp_dat,
+    population_fraction=True,
     track_specific_sequences=['8 A, 0 B','7 A, 1 B','6 A, 2 B','5 A, 3 B','4 A, 4 B','3 A, 5 B','2 A, 6 B','1 A, 7 B','0 A, 8 B'],
     palette=CB_PALETTE_mod
     )

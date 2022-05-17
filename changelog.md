@@ -2,6 +2,12 @@
 # Evolution across fitness valleys
 ## Project changelog
 
+## v1.0.1
+## 17 May 2022
+Updated required Opqua version to 1.0.0 (basically no changes, but aesthetically
+pleasing); modified plotting parameters on code of Fig. 2d to correspond to
+graphs on the paper.
+
 ## v1.0.0
 ## 10 May 2022
 Revisions incorporated!
